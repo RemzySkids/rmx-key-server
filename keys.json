@@ -11,6 +11,16 @@
       "banned": false,
       "createdAt": "2026-11-24T11:09:33.153Z",
       "activatedAt": "2026-11-24T11:09:37.860Z"
+    },
+    "RMX-PA3TS22LYGUB": {
+      "hwid": null,
+      "banned": false,
+      "createdAt": "2026-11-24T11:31:00.990Z"
+    },
+    "RMX-W7U5QJJSVWVS": {
+      "hwid": null,
+      "banned": false,
+      "createdAt": "2026-11-24T11:42:36.968Z"
     }
   }
 }
