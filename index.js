@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
@@ -29,6 +29,10 @@ function generateRmxKey(length = 12) {
 
 const app = express();
 app.use(express.json());
+
+app.get("/", (_req, res) => {
+  res.status(200).json({ status: "ok", service: "rmx-key-server" });
+});
 
 app.post("/api/verify", (req, res) => {
   const rawKey = (req.body?.key || "").trim().toUpperCase();
@@ -69,7 +73,7 @@ app.post("/api/verify", (req, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`[API] Listening on http://localhost:${port}`);
+  console.log(`[API] Listening on port ${port}`);
 });
 
 const commands = [
@@ -92,12 +96,27 @@ const commands = [
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.once("ready", async () => {
+async function onClientReady() {
   console.log(`[BOT] Logged in as ${client.user.tag}`);
-  const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
-  await rest.put(Routes.applicationGuildCommands(client.user.id, process.env.GUILD_ID), { body: commands });
-  console.log("[BOT] Slash commands registered.");
-});
+  const token = process.env.DISCORD_TOKEN;
+  const guildId = process.env.GUILD_ID;
+
+  if (!token || !guildId) {
+    console.warn("[BOT] Missing DISCORD_TOKEN or GUILD_ID; skipping slash command registration.");
+    return;
+  }
+
+  try {
+    const rest = new REST({ version: "10" }).setToken(token);
+    await rest.put(Routes.applicationGuildCommands(client.user.id, guildId), { body: commands });
+    console.log("[BOT] Slash commands registered.");
+  } catch (err) {
+    console.error("[BOT] Failed to register slash commands:", err.message);
+  }
+}
+
+client.once("clientReady", onClientReady);
+client.once("ready", onClientReady);
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -145,4 +164,10 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+if (process.env.DISCORD_TOKEN) {
+  client.login(process.env.DISCORD_TOKEN).catch((err) => {
+    console.error("[BOT] Discord login failed:", err.message);
+  });
+} else {
+  console.warn("[BOT] DISCORD_TOKEN not set; API server is still running.");
+}
