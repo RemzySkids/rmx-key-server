@@ -21,6 +21,11 @@
       "hwid": null,
       "banned": true,
       "createdAt": "2026-11-24T11:42:36.968Z"
+    },
+    "RMX-DB8M3A3JGH6N": {
+      "hwid": null,
+      "banned": false,
+      "createdAt": "2026-11-25T00:31:33.070Z"
     }
   }
 }
