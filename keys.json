@@ -11,11 +11,14 @@
       "machine": "DESKTOP-IGEZ7Y6\\remzy"
     },
     "RMX-OWN-6LZCB76759": {
-      "hwid": null,
+      "hwid": "DESKTOP-A234UNS\\WLP02",
       "banned": false,
       "isOwner": true,
       "subscription": "Lifetime",
-      "createdAt": "2026-11-25T09:45:51.296Z"
+      "createdAt": "2026-11-25T09:45:51.296Z",
+      "activatedAt": "2026-11-25T09:47:34.014Z",
+      "lastSeenAt": "2026-11-25T09:47:34.014Z",
+      "machine": "DESKTOP-A234UNS\\wlp02"
     }
   }
 }
