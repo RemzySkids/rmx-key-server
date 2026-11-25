@@ -7,11 +7,14 @@
       "activatedAt": "2026-11-25T07:53:31.207Z"
     },
     "RMX-OWN-94FC9SRHVC": {
-      "hwid": null,
+      "hwid": "DESKTOP-IGEZ7Y6\\REMZY",
       "banned": false,
       "isOwner": true,
       "subscription": "Lifetime",
-      "createdAt": "2026-11-25T08:58:43.177Z"
+      "createdAt": "2026-11-25T08:58:43.177Z",
+      "activatedAt": "2026-11-25T08:58:52.154Z",
+      "lastSeenAt": "2026-11-25T08:58:52.154Z",
+      "machine": "DESKTOP-IGEZ7Y6\\remzy"
     }
   }
 }
