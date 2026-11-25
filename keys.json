@@ -5,16 +5,6 @@
       "banned": false,
       "createdAt": "2026-11-25T07:53:27.042Z",
       "activatedAt": "2026-11-25T07:53:31.207Z"
-    },
-    "RMX-OWN-QRX8JT87DC": {
-      "hwid": "DESKTOP-IGEZ7Y6\\REMZY",
-      "banned": false,
-      "isOwner": true,
-      "subscription": "Lifetime",
-      "createdAt": "2026-11-25T08:34:19.540Z",
-      "activatedAt": "2026-11-25T08:34:47.166Z",
-      "lastSeenAt": "2026-11-25T08:56:41.688Z",
-      "machine": "DESKTOP-IGEZ7Y6\\remzy"
     }
   }
 }
