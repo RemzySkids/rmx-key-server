@@ -19,6 +19,13 @@
       "activatedAt": "2026-11-25T09:47:34.014Z",
       "lastSeenAt": "2026-11-25T09:47:34.014Z",
       "machine": "DESKTOP-A234UNS\\wlp02"
+    },
+    "RMX-XL429TDJDKH4": {
+      "hwid": null,
+      "banned": false,
+      "isOwner": false,
+      "subscription": "Lifetime",
+      "createdAt": "2026-11-25T09:58:19.458Z"
     }
   }
 }
