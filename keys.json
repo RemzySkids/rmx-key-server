@@ -17,6 +17,11 @@
       "banned": true,
       "createdAt": "2026-11-25T01:22:29.183Z",
       "activatedAt": "2026-11-25T01:22:33.225Z"
+    },
+    "RMX-9TKLLVEZYV83": {
+      "hwid": null,
+      "banned": false,
+      "createdAt": "2026-11-25T01:23:17.730Z"
     }
   }
 }
