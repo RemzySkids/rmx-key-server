@@ -131,6 +131,44 @@ app.post("/api/verify", (req, res) => {
   return res.json({ valid: true, message: "License verified." });
 });
 
+app.post("/api/check", (req, res) => {
+  const rawKey = (req.body?.key || "").trim().toUpperCase();
+  const hwid = (req.body?.hwid || "").trim().toUpperCase();
+
+  if (!rawKey || !hwid) {
+    return res.json({ valid: false, status: "missing", message: "Key and HWID are required. Please close the program." });
+  }
+
+  const db = loadDb();
+  const entry = db.keys[rawKey];
+
+  if (!entry) {
+    return res.json({
+      valid: false,
+      status: "deleted",
+      message: "Your key has been deleted. Please close the program."
+    });
+  }
+
+  if (entry.banned) {
+    return res.json({
+      valid: false,
+      status: "banned",
+      message: "Your key has been banned. Please close the program."
+    });
+  }
+
+  if (entry.hwid && entry.hwid !== hwid) {
+    return res.json({
+      valid: false,
+      status: "hwid_mismatch",
+      message: "HWID mismatch. Key is locked to another PC. Please close the program."
+    });
+  }
+
+  return res.json({ valid: true, status: "active", message: "License active." });
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`[API] Listening on port ${port}`);
