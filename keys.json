@@ -11,6 +11,11 @@
       "banned": true,
       "createdAt": "2026-11-25T01:16:34.925Z",
       "activatedAt": "2026-11-25T01:16:55.433Z"
+    },
+    "RMX-QRKU9UYTJUG8": {
+      "hwid": null,
+      "banned": false,
+      "createdAt": "2026-11-25T01:22:29.183Z"
     }
   }
 }
