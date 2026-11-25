@@ -6,11 +6,10 @@
       "createdAt": "2026-11-25T01:10:54.296Z",
       "activatedAt": "2026-11-25T01:11:04.219Z"
     },
-    "RMX-BQWYNRE6C59W": {
-      "hwid": "BB0D6A5A17BB8D399389CC4539B823ABD05103ABE26EF04F5942988324048E46",
+    "RMX-MMHKCZGWFRFD": {
+      "hwid": null,
       "banned": false,
-      "createdAt": "2026-11-25T05:00:10.190Z",
-      "activatedAt": "2026-11-25T05:00:19.743Z"
+      "createdAt": "2026-11-25T06:26:46.739Z"
     }
   }
 }
