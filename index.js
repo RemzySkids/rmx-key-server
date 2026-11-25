@@ -6,12 +6,15 @@ const express = require("express");
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } = require("discord.js");
 
 const KEYS_FILE = path.join(__dirname, "keys.json");
+const ONLINE_WINDOW_MS = 60 * 1000; // Consider a session online if heartbeat/verify seen within 60s
 
 function loadDb() {
   if (!fs.existsSync(KEYS_FILE)) {
     fs.writeFileSync(KEYS_FILE, JSON.stringify({ keys: {} }, null, 2));
   }
-  return JSON.parse(fs.readFileSync(KEYS_FILE, "utf8"));
+  const parsed = JSON.parse(fs.readFileSync(KEYS_FILE, "utf8"));
+  parsed.keys = parsed.keys || {};
+  return parsed;
 }
 
 let githubSyncQueue = Promise.resolve();
@@ -78,13 +81,26 @@ function saveDb(data) {
     });
 }
 
-function generateRmxKey(length = 12) {
+function generateRmxKey(length = 12, prefix = "RMX-") {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let suffix = "";
   for (let i = 0; i < length; i++) {
     suffix += chars[crypto.randomInt(0, chars.length)];
   }
-  return `RMX-${suffix}`;
+  return `${prefix}${suffix}`;
+}
+
+function isKeyOwner(keyString, entry) {
+  if (entry && entry.isOwner === true) return true;
+  if (typeof keyString === "string" && keyString.toUpperCase().startsWith("RMX-OWN-")) return true;
+  return false;
+}
+
+function isEntryOnline(entry) {
+  if (!entry || !entry.lastSeenAt) return false;
+  const seenMs = Date.parse(entry.lastSeenAt);
+  if (Number.isNaN(seenMs)) return false;
+  return Date.now() - seenMs <= ONLINE_WINDOW_MS;
 }
 
 const app = express();
@@ -97,38 +113,56 @@ app.get("/", (_req, res) => {
 app.post("/api/verify", (req, res) => {
   const rawKey = (req.body?.key || "").trim().toUpperCase();
   const hwid = (req.body?.hwid || "").trim().toUpperCase();
+  const machine = (req.body?.machine || "").trim();
 
   if (!rawKey || !hwid) {
-    return res.json({ valid: false, message: "Key and HWID are required." });
+    return res.json({ valid: false, isOwner: false, message: "Key and HWID are required." });
   }
 
   if (!rawKey.startsWith("RMX-")) {
-    return res.json({ valid: false, message: "Keys must start with RMX-." });
+    return res.json({ valid: false, isOwner: false, message: "Keys must start with RMX-." });
   }
 
   const db = loadDb();
   const entry = db.keys[rawKey];
 
   if (!entry) {
-    return res.json({ valid: false, message: "License key does not exist." });
+    return res.json({ valid: false, isOwner: false, message: "License key does not exist." });
   }
 
   if (entry.banned) {
-    return res.json({ valid: false, message: "This key has been banned." });
+    return res.json({ valid: false, isOwner: false, message: "This key has been banned." });
   }
+
+  const ownerAccess = isKeyOwner(rawKey, entry);
+  const nowIso = new Date().toISOString();
 
   if (!entry.hwid) {
     entry.hwid = hwid;
-    entry.activatedAt = new Date().toISOString();
+    entry.activatedAt = nowIso;
+    entry.lastSeenAt = nowIso;
+    if (machine) entry.machine = machine;
     saveDb(db);
-    return res.json({ valid: true, message: "Key activated and locked to your HWID." });
+    return res.json({
+      valid: true,
+      isOwner: ownerAccess,
+      message: "Key activated and locked to your HWID."
+    });
   }
 
-  if (entry.hwid !== hwid) {
-    return res.json({ valid: false, message: "HWID mismatch. Key is locked to another PC." });
+  if (!ownerAccess && entry.hwid !== hwid) {
+    return res.json({ valid: false, isOwner: false, message: "HWID mismatch. Key is locked to another PC." });
   }
 
-  return res.json({ valid: true, message: "License verified." });
+  entry.lastSeenAt = nowIso;
+  if (machine) entry.machine = machine;
+  saveDb(db);
+
+  return res.json({
+    valid: true,
+    isOwner: ownerAccess,
+    message: "License verified."
+  });
 });
 
 app.post("/api/check", (req, res) => {
@@ -136,7 +170,13 @@ app.post("/api/check", (req, res) => {
   const hwid = (req.body?.hwid || "").trim().toUpperCase();
 
   if (!rawKey || !hwid) {
-    return res.json({ valid: false, status: "missing", message: "Key and HWID are required. Please close the program." });
+    return res.json({
+      valid: false,
+      active: false,
+      isOwner: false,
+      status: "missing",
+      message: "Key and HWID are required. Please close the program."
+    });
   }
 
   const db = loadDb();
@@ -145,6 +185,8 @@ app.post("/api/check", (req, res) => {
   if (!entry) {
     return res.json({
       valid: false,
+      active: false,
+      isOwner: false,
       status: "deleted",
       message: "Your key has been deleted. Please close the program."
     });
@@ -153,20 +195,82 @@ app.post("/api/check", (req, res) => {
   if (entry.banned) {
     return res.json({
       valid: false,
+      active: false,
+      isOwner: false,
       status: "banned",
       message: "Your key has been banned. Please close the program."
     });
   }
 
-  if (entry.hwid && entry.hwid !== hwid) {
+  const ownerAccess = isKeyOwner(rawKey, entry);
+
+  if (!ownerAccess && entry.hwid && entry.hwid !== hwid) {
     return res.json({
       valid: false,
+      active: false,
+      isOwner: false,
       status: "hwid_mismatch",
       message: "HWID mismatch. Key is locked to another PC. Please close the program."
     });
   }
 
-  return res.json({ valid: true, status: "active", message: "License active." });
+  return res.json({
+    valid: true,
+    active: true,
+    isOwner: ownerAccess,
+    status: "active",
+    message: "License active."
+  });
+});
+
+app.post("/api/heartbeat", (req, res) => {
+  const rawKey = (req.body?.key || "").trim().toUpperCase();
+  const hwid = (req.body?.hwid || "").trim().toUpperCase();
+  const machine = (req.body?.machine || "").trim();
+
+  if (!rawKey) {
+    return res.status(400).json({ ok: false, message: "Key is required." });
+  }
+
+  const db = loadDb();
+  const entry = db.keys[rawKey];
+  if (!entry || entry.banned) {
+    return res.status(403).json({ ok: false, message: "Key invalid or banned." });
+  }
+
+  entry.lastSeenAt = new Date().toISOString();
+  if (hwid && !entry.hwid) entry.hwid = hwid;
+  if (machine) entry.machine = machine;
+
+  fs.writeFileSync(KEYS_FILE, JSON.stringify(db, null, 2));
+  return res.json({ ok: true, timestamp: entry.lastSeenAt });
+});
+
+app.get("/api/owner/keys", (req, res) => {
+  const providedKey = String(req.headers["x-owner-key"] || req.query?.key || "")
+    .trim()
+    .toUpperCase();
+
+  const db = loadDb();
+  const callerEntry = db.keys[providedKey];
+
+  if (!callerEntry || callerEntry.banned || !isKeyOwner(providedKey, callerEntry)) {
+    return res.status(403).json({ error: "Owner key required." });
+  }
+
+  const keys = Object.entries(db.keys).map(([keyCode, info]) => ({
+    key: keyCode,
+    online: isEntryOnline(info),
+    active: !info.banned,
+    banned: Boolean(info.banned),
+    isOwner: isKeyOwner(keyCode, info),
+    subscription: info.subscription || "Lifetime",
+    createdAt: info.createdAt || "",
+    lastUsedAt: info.lastSeenAt || info.activatedAt || "",
+    machine: info.machine || info.hwid || ""
+  }));
+
+  return res.json({ keys });
 });
 
 const port = process.env.PORT || 3000;
@@ -180,6 +284,12 @@ const commands = [
     .setDescription("Generate a new RMX-... license key")
     .addIntegerOption((opt) =>
       opt.setName("count").setDescription("How many keys to generate (1-10)").setMinValue(1).setMaxValue(10)
+    ),
+  new SlashCommandBuilder()
+    .setName("ownerkey")
+    .setDescription("Generate one or more Owner Panel license keys")
+    .addIntegerOption((opt) =>
+      opt.setName("count").setDescription("How many owner keys to generate (1-10)").setMinValue(1).setMaxValue(10)
     ),
   new SlashCommandBuilder()
     .setName("resethwid")
@@ -235,15 +345,44 @@ client.on("interactionCreate", async (interaction) => {
     const created = [];
 
     for (let i = 0; i < count; i++) {
-      let key = generateRmxKey(12);
-      while (db.keys[key]) key = generateRmxKey(12);
+      let key = generateRmxKey(12, "RMX-");
+      while (db.keys[key]) key = generateRmxKey(12, "RMX-");
 
-      db.keys[key] = { hwid: null, banned: false, createdAt: new Date().toISOString() };
+      db.keys[key] = {
+        hwid: null,
+        banned: false,
+        isOwner: false,
+        subscription: "Lifetime",
+        createdAt: new Date().toISOString()
+      };
       created.push(key);
     }
 
     saveDb(db);
     await interaction.reply({ content: `Generated key(s):\n\`${created.join("\n")}\``, ephemeral: true });
+  } else if (interaction.commandName === "ownerkey") {
+    const count = interaction.options.getInteger("count") || 1;
+    const created = [];
+
+    for (let i = 0; i < count; i++) {
+      let key = generateRmxKey(10, "RMX-OWN-");
+      while (db.keys[key]) key = generateRmxKey(10, "RMX-OWN-");
+
+      db.keys[key] = {
+        hwid: null,
+        banned: false,
+        isOwner: true,
+        subscription: "Lifetime",
+        createdAt: new Date().toISOString()
+      };
+      created.push(key);
+    }
+
+    saveDb(db);
+    await interaction.reply({
+      content: `Generated Owner key(s):\n\`${created.join("\n")}\``,
+      ephemeral: true
+    });
   } else if (interaction.commandName === "resethwid") {
     const key = interaction.options.getString("key", true).trim().toUpperCase();
     if (!db.keys[key]) {
