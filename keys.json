@@ -24,7 +24,7 @@
     },
     "RMX-DB8M3A3JGH6N": {
       "hwid": "BB0D6A5A17BB8D399389CC4539B823ABD05103ABE26EF04F5942988324048E46",
-      "banned": false,
+      "banned": true,
       "createdAt": "2026-11-25T00:31:33.070Z",
       "activatedAt": "2026-11-25T01:02:30.074Z"
     },
