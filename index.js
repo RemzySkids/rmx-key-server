@@ -151,7 +151,11 @@ const commands = [
     .setName("bankey")
     .setDescription("Ban or unban an RMX key")
     .addStringOption((opt) => opt.setName("key").setDescription("Example: RMX-28D2HA823HALD").setRequired(true))
-    .addBooleanOption((opt) => opt.setName("banned").setDescription("true to ban, false to unban").setRequired(true))
+    .addBooleanOption((opt) => opt.setName("banned").setDescription("true to ban, false to unban").setRequired(true)),
+  new SlashCommandBuilder()
+    .setName("deletekey")
+    .setDescription("Delete an RMX key from files so it no longer works")
+    .addStringOption((opt) => opt.setName("key").setDescription("Example: RMX-28D2HA823HALD").setRequired(true))
 ].map((cmd) => cmd.toJSON());
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -221,6 +225,15 @@ client.on("interactionCreate", async (interaction) => {
     db.keys[key].banned = banned;
     saveDb(db);
     await interaction.reply({ content: `Key \`${key}\` updated: banned = \`${banned}\`.`, ephemeral: true });
+  } else if (interaction.commandName === "deletekey") {
+    const key = interaction.options.getString("key", true).trim().toUpperCase();
+    if (!db.keys[key]) {
+      await interaction.reply({ content: `Key \`${key}\` not found.`, ephemeral: true });
+      return;
+    }
+    delete db.keys[key];
+    saveDb(db);
+    await interaction.reply({ content: `Deleted key \`${key}\` from files.`, ephemeral: true });
   }
 });
 
