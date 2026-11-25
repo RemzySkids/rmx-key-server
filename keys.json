@@ -1,9 +1,10 @@
 {
   "keys": {
     "RMX-M2MFK88J53EB": {
-      "hwid": null,
+      "hwid": "6F36963014ABE7BCE75CA114B845E0D9110715D9E868BB87CD790B10882C42C2",
       "banned": false,
-      "createdAt": "2026-11-25T01:25:19.335Z"
+      "createdAt": "2026-11-25T01:25:19.335Z",
+      "activatedAt": "2026-11-25T01:26:07.338Z"
     }
   }
 }
