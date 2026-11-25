@@ -1,11 +1,5 @@
 {
   "keys": {
-    "RMX-C5DJ3ZY8XQ53": {
-      "hwid": "BB0D6A5A17BB8D399389CC4539B823ABD05103ABE26EF04F5942988324048E46",
-      "banned": false,
-      "createdAt": "2026-11-25T07:53:27.042Z",
-      "activatedAt": "2026-11-25T07:53:31.207Z"
-    },
     "RMX-OWN-94FC9SRHVC": {
       "hwid": "DESKTOP-IGEZ7Y6\\REMZY",
       "banned": false,
@@ -13,7 +7,7 @@
       "subscription": "Lifetime",
       "createdAt": "2026-11-25T08:58:43.177Z",
       "activatedAt": "2026-11-25T08:58:52.154Z",
-      "lastSeenAt": "2026-11-25T08:58:52.154Z",
+      "lastSeenAt": "2026-11-25T08:58:52.287Z",
       "machine": "DESKTOP-IGEZ7Y6\\remzy"
     }
   }
