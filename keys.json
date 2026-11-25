@@ -19,8 +19,15 @@
       "subscription": "Lifetime",
       "createdAt": "2026-11-25T08:34:19.540Z",
       "activatedAt": "2026-11-25T08:34:47.166Z",
-      "lastSeenAt": "2026-11-25T08:56:21.556Z",
+      "lastSeenAt": "2026-11-25T08:56:21.695Z",
       "machine": "DESKTOP-IGEZ7Y6\\remzy"
+    },
+    "RMX-JFZ8F47F7VM3": {
+      "hwid": null,
+      "banned": false,
+      "isOwner": false,
+      "subscription": "Lifetime",
+      "createdAt": "2026-11-25T08:56:26.280Z"
     }
   }
 }
