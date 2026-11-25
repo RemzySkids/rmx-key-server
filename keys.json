@@ -6,12 +6,6 @@
       "createdAt": "2026-11-25T07:53:27.042Z",
       "activatedAt": "2026-11-25T07:53:31.207Z"
     },
-    "RMX-RemzyOwnerW": {
-      "hwid": null,
-      "banned": false,
-      "createdAt": "2026-11-25T08:27:00.000Z",
-      "activatedAt": null
-    },
     "RMX-OWN-QRX8JT87DC": {
       "hwid": "DESKTOP-IGEZ7Y6\\REMZY",
       "banned": false,
@@ -19,15 +13,15 @@
       "subscription": "Lifetime",
       "createdAt": "2026-11-25T08:34:19.540Z",
       "activatedAt": "2026-11-25T08:34:47.166Z",
-      "lastSeenAt": "2026-11-25T08:56:21.695Z",
+      "lastSeenAt": "2026-11-25T08:56:41.688Z",
       "machine": "DESKTOP-IGEZ7Y6\\remzy"
     },
-    "RMX-JFZ8F47F7VM3": {
+    "RMX-LB547ESC2447": {
       "hwid": null,
       "banned": false,
       "isOwner": false,
       "subscription": "Lifetime",
-      "createdAt": "2026-11-25T08:56:26.280Z"
+      "createdAt": "2026-11-25T08:56:50.392Z"
     }
   }
 }
