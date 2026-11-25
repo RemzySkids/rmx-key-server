@@ -1,9 +1,10 @@
 {
   "keys": {
     "RMX-HNJ8FMDKGPVV": {
-      "hwid": null,
+      "hwid": "BB0D6A5A17BB8D399389CC4539B823ABD05103ABE26EF04F5942988324048E46",
       "banned": false,
-      "createdAt": "2026-11-25T01:35:52.622Z"
+      "createdAt": "2026-11-25T01:35:52.622Z",
+      "activatedAt": "2026-11-25T01:36:04.718Z"
     }
   }
 }
