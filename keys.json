@@ -5,6 +5,13 @@
       "banned": false,
       "createdAt": "2026-11-25T07:53:27.042Z",
       "activatedAt": "2026-11-25T07:53:31.207Z"
+    },
+    "RMX-9YQG5UMFX7U4": {
+      "hwid": null,
+      "banned": false,
+      "isOwner": false,
+      "subscription": "Lifetime",
+      "createdAt": "2026-11-25T08:58:27.638Z"
     }
   }
 }
