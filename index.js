@@ -103,6 +103,18 @@ function isEntryOnline(entry) {
   return Date.now() - seenMs <= ONLINE_WINDOW_MS;
 }
 
+function hasKeygenRole(interaction, roleId) {
+  if (!roleId) return false;
+  const memberRoles = interaction.member?.roles;
+  if (!memberRoles) return false;
+
+  if (Array.isArray(memberRoles)) {
+    return memberRoles.includes(roleId);
+  }
+
+  return Boolean(memberRoles.cache?.has(roleId));
+}
+
 const app = express();
 app.use(express.json());
 
@@ -333,8 +345,20 @@ client.once("ready", onClientReady);
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  if (interaction.user.id !== process.env.ADMIN_USER_ID) {
-    await interaction.reply({ content: "Only the bot owner can run key management commands.", ephemeral: true });
+  const keygenRoleId = (process.env.KEYGEN_ROLE_ID || "").trim();
+  if (!interaction.inCachedGuild() || !keygenRoleId) {
+    await interaction.reply({
+      content: "Key management commands require a server and KEYGEN_ROLE_ID to be configured.",
+      ephemeral: true
+    });
+    return;
+  }
+
+  if (!hasKeygenRole(interaction, keygenRoleId)) {
+    await interaction.reply({
+      content: "You do not have the required role to run key management commands.",
+      ephemeral: true
+    });
     return;
   }
 
