@@ -19,6 +19,13 @@
       "activatedAt": "2026-11-25T09:47:34.014Z",
       "lastSeenAt": "2026-11-25T09:47:34.014Z",
       "machine": "DESKTOP-A234UNS\\wlp02"
+    },
+    "RMX-WMPLQKFEZFYT": {
+      "hwid": null,
+      "banned": false,
+      "isOwner": false,
+      "subscription": "Lifetime",
+      "createdAt": "2026-11-25T09:59:49.064Z"
     }
   }
 }
