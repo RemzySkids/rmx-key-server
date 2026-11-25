@@ -1,3 +1,11 @@
 {
-  "keys": {}
+  "keys": {
+    "RMX-OWN-C3UAB3LEJL": {
+      "hwid": null,
+      "banned": false,
+      "isOwner": true,
+      "subscription": "Lifetime",
+      "createdAt": "2026-11-25T09:12:59.042Z"
+    }
+  }
 }
