@@ -1,9 +1,10 @@
 {
   "keys": {
     "RMX-EWYKN29H4732": {
-      "hwid": null,
+      "hwid": "BB0D6A5A17BB8D399389CC4539B823ABD05103ABE26EF04F5942988324048E46",
       "banned": false,
-      "createdAt": "2026-11-25T01:29:25.907Z"
+      "createdAt": "2026-11-25T01:29:25.907Z",
+      "activatedAt": "2026-11-25T01:29:32.891Z"
     }
   }
 }
