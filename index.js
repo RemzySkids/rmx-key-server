@@ -14,8 +14,68 @@ function loadDb() {
   return JSON.parse(fs.readFileSync(KEYS_FILE, "utf8"));
 }
 
+let githubSyncQueue = Promise.resolve();
+
+async function pushKeysToGitHub(data) {
+  const token = process.env.GITHUB_TOKEN;
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || "main";
+
+  if (!token || !owner || !repo) {
+    console.warn("[GITHUB] Missing GITHUB_TOKEN, GITHUB_OWNER, or GITHUB_REPO; skipping GitHub sync.");
+    return;
+  }
+
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/keys.json`;
+  const headers = {
+    Accept: "application/vnd.github+json",
+    Authorization: `Bearer ${token}`,
+    "User-Agent": "rmx-key-server"
+  };
+
+  const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}`, { headers });
+  let sha;
+  if (getRes.ok) {
+    const fileInfo = await getRes.json();
+    sha = fileInfo.sha;
+  } else if (getRes.status !== 404) {
+    const errText = await getRes.text();
+    throw new Error(`Failed to read keys.json from GitHub (${getRes.status}): ${errText}`);
+  }
+
+  const content = Buffer.from(JSON.stringify(data, null, 2) + "\n", "utf8").toString("base64");
+  const body = {
+    message: "[skip render] Auto-update keys.json",
+    content,
+    branch,
+    ...(sha ? { sha } : {})
+  };
+
+  const putRes = await fetch(apiUrl, {
+    method: "PUT",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!putRes.ok) {
+    const errText = await putRes.text();
+    throw new Error(`Failed to update keys.json on GitHub (${putRes.status}): ${errText}`);
+  }
+
+  console.log("[GITHUB] Synced keys.json to repository.");
+}
+
 function saveDb(data) {
   fs.writeFileSync(KEYS_FILE, JSON.stringify(data, null, 2));
+  githubSyncQueue = githubSyncQueue
+    .then(() => pushKeysToGitHub(data))
+    .catch((err) => {
+      console.error("[GITHUB] Sync error:", err.message);
+    });
 }
 
 function generateRmxKey(length = 12) {
