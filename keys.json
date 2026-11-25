@@ -1,10 +1,15 @@
 {
   "keys": {
-    "RMX-HNJ8FMDKGPVV": {
+    "RMX-5FEAS95S3BY3": {
       "hwid": "BB0D6A5A17BB8D399389CC4539B823ABD05103ABE26EF04F5942988324048E46",
+      "banned": true,
+      "createdAt": "2026-11-25T01:10:54.296Z",
+      "activatedAt": "2026-11-25T01:11:04.219Z"
+    },
+    "RMX-BQWYNRE6C59W": {
+      "hwid": null,
       "banned": false,
-      "createdAt": "2026-11-25T01:35:52.622Z",
-      "activatedAt": "2026-11-25T01:36:04.718Z"
+      "createdAt": "2026-11-25T05:00:10.190Z"
     }
   }
 }
