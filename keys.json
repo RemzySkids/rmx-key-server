@@ -21,11 +21,14 @@
       "machine": "DESKTOP-A234UNS\\wlp02"
     },
     "RMX-K2E7RC54DKJM": {
-      "hwid": null,
+      "hwid": "AHMED\\AHMED",
       "banned": false,
       "isOwner": false,
       "subscription": "Lifetime",
-      "createdAt": "2026-11-26T03:49:26.164Z"
+      "createdAt": "2026-11-26T03:49:26.164Z",
+      "activatedAt": "2026-11-26T03:50:02.720Z",
+      "lastSeenAt": "2026-11-26T03:50:02.720Z",
+      "machine": "AHMED\\ahmed"
     }
   }
 }
