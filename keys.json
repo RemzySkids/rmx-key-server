@@ -7,7 +7,7 @@
       "subscription": "Lifetime",
       "createdAt": "2026-11-25T09:12:59.042Z",
       "activatedAt": "2026-11-25T09:13:05.213Z",
-      "lastSeenAt": "2026-11-26T03:48:48.088Z",
+      "lastSeenAt": "2026-11-26T05:55:32.641Z",
       "machine": "DESKTOP-IGEZ7Y6\\remzy"
     },
     "RMX-OWN-6LZCB76759": {
@@ -19,16 +19,6 @@
       "activatedAt": "2026-11-25T09:47:34.014Z",
       "lastSeenAt": "2026-11-25T09:47:34.014Z",
       "machine": "DESKTOP-A234UNS\\wlp02"
-    },
-    "RMX-K2E7RC54DKJM": {
-      "hwid": "AHMED\\AHMED",
-      "banned": false,
-      "isOwner": false,
-      "subscription": "Lifetime",
-      "createdAt": "2026-11-26T03:49:26.164Z",
-      "activatedAt": "2026-11-26T03:50:02.720Z",
-      "lastSeenAt": "2026-11-26T03:50:02.720Z",
-      "machine": "AHMED\\ahmed"
     }
   }
 }
