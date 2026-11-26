@@ -7,7 +7,7 @@
       "subscription": "Lifetime",
       "createdAt": "2026-11-25T09:12:59.042Z",
       "activatedAt": "2026-11-25T09:13:05.213Z",
-      "lastSeenAt": "2026-11-26T05:55:32.641Z",
+      "lastSeenAt": "2026-11-26T06:27:12.757Z",
       "machine": "DESKTOP-IGEZ7Y6\\remzy"
     },
     "RMX-OWN-6LZCB76759": {
@@ -19,6 +19,13 @@
       "activatedAt": "2026-11-25T09:47:34.014Z",
       "lastSeenAt": "2026-11-25T09:47:34.014Z",
       "machine": "DESKTOP-A234UNS\\wlp02"
+    },
+    "RMX-QUFCF29SKYA3": {
+      "hwid": null,
+      "banned": false,
+      "isOwner": false,
+      "subscription": "Lifetime",
+      "createdAt": "2026-11-26T06:27:33.338Z"
     }
   }
 }
